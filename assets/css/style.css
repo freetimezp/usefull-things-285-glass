@@ -1,9 +1,11 @@
+/* =========================
+   RESET & BASE
+========================= */
 * {
-    padding: 0;
     margin: 0;
+    padding: 0;
     box-sizing: border-box;
     list-style: none;
-    list-style-type: none;
 }
 
 a {
@@ -17,6 +19,9 @@ body {
     overflow: hidden;
 }
 
+/* =========================
+   LAYOUT
+========================= */
 .container {
     width: 100%;
     height: 100%;
@@ -27,85 +32,139 @@ body {
     justify-content: center;
 }
 
-.container::before {
+/* Decorative gradients */
+.container::before,
+.container::after {
     content: "";
     position: absolute;
+    border-radius: 50%;
+}
+
+.container::before {
     width: 330px;
     height: 330px;
-    border-radius: 100%;
     background: linear-gradient(#000, #f00);
     transform: translate(-720px, -290px);
 }
 
 .container::after {
-    content: "";
-    position: absolute;
     width: 450px;
     height: 450px;
-    border-radius: 100%;
     background: linear-gradient(#87167f, #000);
     transform: translate(650px, 150px);
+}
+
+/* =========================
+   FLOATING BALLS
+========================= */
+.ball-1,
+.ball-2,
+.ball-3 {
+    position: absolute;
+    border-radius: 50%;
+    animation: float ease-in-out infinite;
 }
 
 .ball-1 {
     width: 40px;
     height: 40px;
-    position: absolute;
-    border-radius: 100%;
     background: #04f504;
-    transform: translate(-250px, 200px);
+    --x: -250px;
+    --y: 200px;
+    animation-duration: 6s;
 }
 
 .ball-2 {
     width: 90px;
     height: 90px;
-    position: absolute;
-    border-radius: 100%;
     background: #eeff01;
-    transform: translate(-10px, -220px);
+    --x: -10px;
+    --y: -220px;
+    animation-duration: 8s;
 }
 
 .ball-3 {
     width: 70px;
     height: 70px;
-    position: absolute;
-    border-radius: 100%;
     background: #01a0f6;
-    transform: translate(100px, 100px);
+    --x: 100px;
+    --y: 100px;
+    animation-duration: 5s;
 }
 
+@keyframes float {
+    0% {
+        transform: translate(var(--x), var(--y));
+    }
+    50% {
+        transform: translate(calc(var(--x) + 20px), calc(var(--y) - 30px)) scale(1.3);
+    }
+    100% {
+        transform: translate(var(--x), var(--y));
+    }
+}
+
+/* =========================
+   GLASS BOX
+========================= */
 .box {
     width: 75%;
     height: 85%;
     padding: 20px;
-    background: rgba(255, 255, 255, 0.1);
+    position: relative;
     z-index: 10;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    position: relative;
+
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 20px;
     border: 2px solid rgba(255, 255, 255, 0.35);
     backdrop-filter: blur(25px);
     box-shadow: -15px 17px 17px rgba(10, 10, 10, 0.35);
 }
 
+/* Glow effect */
+.box::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 22px;
+    z-index: -1;
+
+    background: linear-gradient(120deg, rgba(255, 0, 150, 0.1), rgba(0, 200, 255, 0.1), rgba(255, 255, 0, 0.1));
+
+    filter: blur(25px);
+    animation: glow 6s linear infinite;
+}
+
+@keyframes glow {
+    to {
+        filter: blur(25px) hue-rotate(360deg);
+    }
+}
+
+/* =========================
+   NAVIGATION
+========================= */
 .box nav {
-    width: 100%;
     height: 60px;
+    padding: 20px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px;
+
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeDown 1s ease forwards;
 }
 
-nav ul {
-    display: flex;
-}
-
-nav ul li {
-    display: inline-block;
-    padding: 0 20px;
+@keyframes fadeDown {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 nav .logo {
@@ -114,32 +173,56 @@ nav .logo {
     color: #fff;
 }
 
+nav ul {
+    display: flex;
+}
+
+nav ul li {
+    padding: 0 20px;
+}
+
 nav ul li a {
+    position: relative;
     font-size: 20px;
     text-transform: uppercase;
     color: #fff;
-    transition: color 0.4s ease-in-out;
-    cursor: pointer;
+    transition: color 0.3s ease;
 }
 
 nav ul li a:hover {
     color: orangered;
 }
 
+nav ul li a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 0%;
+    height: 2px;
+    background: orangered;
+    transition: width 0.3s ease;
+}
+
+nav ul li a:hover::after {
+    width: 100%;
+}
+
+/* =========================
+   CONTENT
+========================= */
 .box .content {
+    height: 80%;
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    height: 80%;
-    position: relative;
 }
 
 .content .section {
-    position: relative;
     flex: 1;
     padding: 80px;
 }
 
+/* Text section */
 .section-1 h1 {
     font-size: 75px;
     color: #fff;
@@ -148,16 +231,29 @@ nav ul li a:hover {
 
 .section-1 p {
     width: 70%;
+    margin-bottom: 50px;
     text-align: justify;
     color: #ccc;
-    margin-bottom: 50px;
 }
 
+/* Buttons */
 .section-1 .button {
     display: inline-block;
     padding: 10px 40px;
     border: 1px solid #fff;
     cursor: pointer;
+
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 1s ease forwards;
+    animation-delay: 0.9s;
+
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.section-1 .button:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.25);
 }
 
 .section-1 .button a {
@@ -165,18 +261,62 @@ nav ul li a:hover {
 }
 
 .section-1 .btn-2 {
-    background-color: #fff;
-    border: 1px solid #fff;
-    cursor: pointer;
+    background: #fff;
 }
 
 .section-1 .btn-2 a {
     color: #141414;
 }
 
+/* Fade text */
+.section-1 h1,
+.section-1 p {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 1s ease forwards;
+}
+
+.section-1 h1 {
+    animation-delay: 0.3s;
+}
+.section-1 p {
+    animation-delay: 0.6s;
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================
+   IMAGE
+========================= */
 .section-2 img {
     position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 75%;
+
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+    animation: imageIn 1.5s ease forwards, ballRotation 50s linear infinite;
+    animation-delay: 0.8s;
+}
+
+@keyframes imageIn {
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes ballRotation {
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1) rotate(360deg);
+    }
 }
